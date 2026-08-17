@@ -25,10 +25,11 @@ jobs:
           ninja -C build
           sudo ninja -C build install
           sudo ldconfig
-# idk , Tidal wave
-      - name: Patch Broken Fortune Code 
+          
+        # idk , Tidal wave
+      - name: Patch Broken Fortune Code # Something is coming in three days.
         run: |
-          sed -i '/Goose::ForceFetchFortune/d' src/app_actions.cpp
+          echo "namespace Goose { void ForceFetchFortune(int a, int b) {} }" >> src/goose.cpp
           
       - name: Configure CMake
         run: |
