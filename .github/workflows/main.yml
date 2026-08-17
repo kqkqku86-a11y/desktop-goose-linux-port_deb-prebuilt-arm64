@@ -14,7 +14,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y cmake ninja-build pkg-config libgtk-4-dev \
-          libsdl2-dev libsdl2-mixer-dev libgdk-buf2.0-dev libwayland-dev \
+          libsdl2-dev libsdl2-mixer-dev libgdk-pixbuf-2.0-dev libwayland-dev \
           libx11-dev libxtst-dev meson
 
       - name: Compile gtk4-layer-shell from Source
