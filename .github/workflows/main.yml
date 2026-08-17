@@ -42,8 +42,56 @@ jobs:
           cd build
           make
 
-      - name: Upload Binary Artifact
+      # --- PROSES PEMBUATAN PAKET .DEB LENGKAP DENGAN IKON & SHORTCUT EXE ---
+      - name: Package into DEB with Desktop Shortcut
+        run: |
+          # 1. Membuat struktur folder standar sistem Linux
+          mkdir -p package/usr/local/bin
+          mkdir -p package/usr/share/applications
+          mkdir -p package/usr/share/icons/hicolor/scalable/apps
+          mkdir -p package/DEBIAN
+          
+          # 2. Menyalin file biner utama ke sistem
+          cp build/CppGoose package/usr/local/bin/cppgoose
+          
+          # 3. Mengunduh atau membuat ikon angsa (Format SVG/PNG)
+          # Kita ambil sampel ikon angsa resmi dari aset publik internet
+          curl -sL "https://img.itch.zone/aW1nLzI5MzA5MTQucG5n/347x500/gacG50.png" -o package/usr/share/icons/hicolor/scalable/apps/cppgoose.svg || touch package/usr/share/icons/hicolor/scalable/apps/cppgoose.svg
+          
+          # 4. Membuat file .desktop (Ini yang bikin bisa diklik 2x seperti .exe + muncul ikon)
+          cat <<EOF > package/usr/share/applications/cppgoose.desktop
+          [Desktop Entry]
+          Type=Application
+          Version=1.0.0
+          Name=Desktop Goose Linux
+          Comment=An annoying goose on your desktop
+          Exec=/usr/local/bin/cppgoose
+          Icon=cppgoose
+          Terminal=false
+          Categories=Utility;Game;
+          EOF
+          
+          # 5. Membuat file kontrol spesifikasi paket Debian
+          cat <<EOF > package/DEBIAN/control
+          Package: cppgoose
+          Version: 1.0.0
+          Section: utils
+          Priority: optional
+          Architecture: arm64
+          Maintainer: GitHub Actions
+          Description: Desktop Goose port for Linux with desktop entry shortcut and icon.
+          EOF
+          
+          # 6. Memberikan izin eksekusi standar sistem sebelum dibungkus
+          chmod +x package/usr/local/bin/cppgoose
+          chmod +x package/usr/share/applications/cppgoose.desktop
+          
+          # 7. Membungkus menjadi paket .deb final
+          dpkg-deb --build package cppgoose.deb
+
+      - name: Upload Final DEB Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CppGoose-Termux-ARM64
-          path: build/CppGoose
+          name: CppGoose-Installer-ARM64
+          path: cppgoose.deb
+          
