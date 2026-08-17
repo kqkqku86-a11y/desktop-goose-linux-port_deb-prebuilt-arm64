@@ -1,4 +1,4 @@
-name: Build Desktop Goose ARM64 for Termux
+name: Build Desktop Goose ARM64
 
 on:
   workflow_dispatch: # Membuat tombol manual "Run workflow" di tab Actions
