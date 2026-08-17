@@ -1,0 +1,44 @@
+name: Build Desktop Goose ARM64 for Termux
+
+on:
+  workflow_dispatch: # Membuat tombol manual "Run workflow" di tab Actions
+
+jobs:
+  build-arm:
+    runs-on: ubuntu-24.04-arm # Menggunakan runner asli ARM64 dari GitHub
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Build Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y cmake ninja-build pkg-config libgtk-4-dev \
+          libsdl2-dev libsdl2-mixer-dev libgdk-buf2.0-dev libwayland-dev \
+          libx11-dev libxtst-dev meson
+
+      - name: Compile gtk4-layer-shell from Source
+        run: |
+          git clone https://github.com/wmww/gtk4-layer-shell.git
+          cd gtk4-layer-shell
+          meson setup build
+          ninja -C build
+          sudo ninja -C build install
+          sudo ldconfig
+
+      - name: Configure CMake
+        run: |
+          mkdir build
+          cd build
+          cmake -DCMAKE_BUILD_TYPE=Release ..
+
+      - name: Build CppGoose Binary
+        run: |
+          cd build
+          make
+
+      - name: Upload Binary Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CppGoose-Termux-ARM64
+          path: build/CppGoose
