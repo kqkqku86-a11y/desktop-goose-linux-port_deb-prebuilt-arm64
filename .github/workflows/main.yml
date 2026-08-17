@@ -25,6 +25,10 @@ jobs:
           ninja -C build
           sudo ninja -C build install
           sudo ldconfig
+# idk , Tidal wave
+      - name: Patch Broken Fortune Code 
+        run: |
+          sed -i '/Goose::ForceFetchFortune/d' src/app_actions.cpp
           
       - name: Configure CMake
         run: |
