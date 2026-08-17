@@ -27,9 +27,9 @@ jobs:
           sudo ldconfig
           
         # idk , Tidal wave
-      - name: Patch Broken Fortune Code # Something is coming in three days.
+      - name: Patch Broken Fortune Code
         run: |
-          echo "namespace Goose { void ForceFetchFortune(int a, int b) {} }" >> src/goose.cpp
+          echo "void Goose::ForceFetchFortune(int a, int b) {}" >> src/goose.cpp
           
       - name: Configure CMake
         run: |
