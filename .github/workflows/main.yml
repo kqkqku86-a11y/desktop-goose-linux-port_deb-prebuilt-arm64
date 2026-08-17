@@ -1,11 +1,11 @@
 name: Build Desktop Goose ARM64
 
 on:
-  workflow_dispatch: # Membuat tombol manual "Run workflow" di tab Actions
+  workflow_dispatch: # my ai is kinda homeless
 
 jobs:
   build-arm:
-    runs-on: ubuntu-24.04-arm # Menggunakan runner asli ARM64 dari GitHub
+    runs-on: ubuntu-24.04-arm # tuan buas nasi, tuan buas makan nasi
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -21,11 +21,11 @@ jobs:
         run: |
           git clone https://github.com/wmww/gtk4-layer-shell.git
           cd gtk4-layer-shell
-          meson setup build
+          meson setup -Dintrospection=false -Dvapi=false build
           ninja -C build
           sudo ninja -C build install
           sudo ldconfig
-
+          
       - name: Configure CMake
         run: |
           mkdir build
